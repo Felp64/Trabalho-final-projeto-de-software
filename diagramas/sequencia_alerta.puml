@@ -1,0 +1,37 @@
+@startuml
+autonumber
+
+actor "Rastreador IoT" as IoT
+participant "Serviço Ingestão (Node.js)" as Ingestao
+queue "Apache Kafka" as Kafka
+participant "Microsserviço Gestão (Spring)" as Gestao
+database "PostgreSQL" as BD
+participant "Serviço Notificação" as Notificacao
+actor "Cliente (Mobile App)" as Cliente
+actor "Central Seguradora" as Central
+
+IoT -> Ingestao: Envia Telemetria (Movimento Suspeito - Ignição Desligada)
+activate Ingestao
+Ingestao -> Ingestao: Valida pacote de dados
+Ingestao -> Kafka: Publica evento "TelemetriaRecebida"
+deactivate Ingestao
+
+Kafka -> Gestao: Consome evento "TelemetriaRecebida"
+activate Gestao
+Gestao -> Gestao: Motor de Regras: Analisa Coordenadas vs Estado da Ignição
+Gestao -> Gestao: Detecta Violação (Possível Reboque/Roubo)
+Gestao -> BD: Registra Alerta Critico
+Gestao -> Kafka: Publica evento "AlertaGerado"
+deactivate Gestao
+
+Kafka -> Notificacao: Consome "AlertaGerado"
+activate Notificacao
+Notificacao -> Cliente: Dispara Push Notification: "Veículo em movimento não autorizado!"
+Notificacao -> Central: Exibe popup vermelho no Dashboard Web
+deactivate Notificacao
+
+Cliente -> Gestao: Solicita Bloqueio do Veículo
+Gestao -> IoT: Envia comando MQTT (Corte de Combustível/Bloqueio)
+IoT --> Gestao: Confirmação de Bloqueio
+
+@enduml

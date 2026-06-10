@@ -1,0 +1,24 @@
+@startuml
+skinparam style strictuml
+
+actor Cliente
+participant ":Sistema\nTrackSeg" as Sys
+
+title Diagrama de Sequência do Sistema (DSS) - Casos de Uso
+
+== UC-01: Agendar Instalação ==
+Cliente -> Sys : agendarInstalacao(veiculoId, data)
+Sys --> Cliente : confirmacao(ordemServicoId)
+
+== UC-02: Emitir Alerta de Violação ==
+actor Rastreador
+Rastreador -> Sys : processarTelemetria(rastreadorId, lat, lng, ignicaoOff)
+Sys --> Rastreador : ack()
+note right of Sys: Motor detecta deslocamento com ignição desligada\nDispara alertas internos.
+
+== UC-03: Bloquear Veículo Remotamente ==
+actor Atendente
+Atendente -> Sys : bloquearVeiculo(veiculoId, motivoRoubo)
+Sys --> Atendente : confirmacaoComandoEnviado()
+note right of Sys: O sistema se encarrega de \nnotificar o hardware via MQTT
+@enduml

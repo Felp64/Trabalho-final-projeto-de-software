@@ -1,0 +1,38 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Cliente Segurado" as Cliente
+actor "Técnico Parceiro" as Tecnico
+actor "Atendente Seguradora" as Atendente
+actor "Rastreador (IoT)" as Rastreador
+
+rectangle "Sistema TrackSeg" {
+  
+  usecase "Agendar Instalação" as UC1
+  usecase "Realizar Vistoria e Instalação" as UC2
+  usecase "Enviar Coordenadas e Telemetria" as UC3
+  usecase "Visualizar Localização do Veículo" as UC4
+  usecase "Acionar Botão de Pânico / Roubo" as UC5
+  usecase "Monitorar Frota e Riscos" as UC6
+  usecase "Bloquear Veículo Remotamente" as UC7
+  usecase "Analisar Histórico de Trajetos" as UC8
+
+  Cliente --> UC1
+  Cliente --> UC4
+  Cliente --> UC5
+  Cliente --> UC8
+
+  Tecnico --> UC2
+  
+  Rastreador --> UC3
+  
+  Atendente --> UC6
+  Atendente --> UC7
+  Atendente --> UC8
+  
+  UC1 .> UC2 : <<include>>
+  UC5 .> UC7 : <<extend>> (Em caso de roubo confirmado)
+}
+
+@enduml

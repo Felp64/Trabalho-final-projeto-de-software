@@ -1,0 +1,54 @@
+@startuml
+!define RECTANGLE class
+
+node "Veículo (Hardware)" {
+  [Rastreador GPS/IoT] as IoT
+}
+
+node "Cloud AWS" {
+  
+  package "Camada de Ingestão (Node.js)" {
+    [Gateway MQTT / TCP] as Gateway
+    [Validador de Pacotes] as Validador
+  }
+
+  package "Mensageria e Streaming" {
+    queue "Apache Kafka" as Kafka
+  }
+
+  package "Microsserviços de Negócio (Spring Boot)" {
+    [Serviço de Telemetria] as Telemetria
+    [Serviço de Seguros e Frota] as Seguros
+    [Motor de Regras (Alertas)] as Regras
+  }
+  
+  package "Camada de Dados" {
+    database "PostgreSQL\n(Dados Relacionais)" as Postgres
+    database "MongoDB\n(Histórico GPS)" as Mongo
+    database "Redis\n(Cache de Sessões/Estado)" as Redis
+  }
+  
+  package "Frontend & Apps" {
+    [Painel Web (React)] as WebApp
+    [App Mobile (React Native)] as MobileApp
+  }
+
+}
+
+IoT --> Gateway : MQTT/TCP
+Gateway -> Validador
+Validador --> Kafka : Publica "Raw GPS Data"
+
+Kafka <-- Telemetria : Consome
+Telemetria --> Mongo : Salva Histórico
+Telemetria --> Regras : Avalia Evento
+Regras --> Kafka : Publica "Alertas"
+
+Kafka <-- Seguros : Consome Alertas
+Seguros --> Postgres : Registra Ocorrência
+Seguros --> Redis : Atualiza Status Veículo
+
+WebApp --> Seguros : REST API / WebSockets
+MobileApp --> Seguros : REST API
+
+@enduml

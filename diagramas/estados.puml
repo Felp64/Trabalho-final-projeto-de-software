@@ -1,0 +1,24 @@
+@startuml
+title Máquina de Estados: Ciclo de Vida do Rastreador
+
+[*] --> EmEstoque : Chegada de Lote
+
+EmEstoque --> AgendadoParaInstalacao : OS Criada
+AgendadoParaInstalacao --> EmEstoque : OS Cancelada
+
+AgendadoParaInstalacao --> Instalado : Técnico Finaliza OS
+Instalado --> Ativo_Monitorando : Primeiro Ping Recebido
+
+Ativo_Monitorando --> Alerta_Violacao : Telemetria Anômala (Roubo/Jammer)
+Alerta_Violacao --> Bloqueado : Comando Central Recebido
+Bloqueado --> Ativo_Monitorando : Comando Desbloqueio
+Alerta_Violacao --> Ativo_Monitorando : Falso Positivo (Central Descarta)
+
+Ativo_Monitorando --> Inativo : Bateria Zero / Offline > 24h
+Inativo --> Ativo_Monitorando : Ping Recebido
+
+Ativo_Monitorando --> Descartado : Fim Vida Útil
+Inativo --> Descartado : Quebra Confirmada
+Descartado --> [*]
+
+@enduml

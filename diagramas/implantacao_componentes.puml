@@ -1,0 +1,43 @@
+@startuml
+node "Dispositivo Cliente" {
+  [App Mobile (React Native)] <<component>>
+}
+
+node "Dispositivo Central" {
+  [Painel Web (React)] <<component>>
+}
+
+node "Hardware Veicular" {
+  [Rastreador IoT] <<component>>
+}
+
+node "AWS Cloud (Production)" {
+
+  node "EKS (Kubernetes Cluster)" {
+    component [Microsserviço de Gestão] <<Spring Boot>> as Gestao
+    component [Microsserviço de Ingestão] <<Node.js>> as Ingestao
+  }
+
+  node "MSK Cluster" {
+    queue [Apache Kafka] <<mensageria>> as Kafka
+  }
+
+  node "RDS (Relational Database Service)" {
+    database [PostgreSQL] as DB
+  }
+  
+  node "DocumentDB" {
+    database [MongoDB] as NoSQL
+  }
+
+}
+
+[App Mobile (React Native)] ..> Gestao : HTTPS / REST
+[Painel Web (React)] ..> Gestao : HTTPS / WebSockets
+[Rastreador IoT] ..> Ingestao : MQTT / TCP
+
+Ingestao ..> Kafka : Produz eventos
+Gestao ..> Kafka : Consome eventos
+Gestao ..> DB : JDBC
+Gestao ..> NoSQL : Mongoose / Driver
+@enduml

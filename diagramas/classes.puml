@@ -1,0 +1,92 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+package "Domínio Principal" {
+  class Cliente {
+    - id : UUID
+    - nome : String
+    + solicitarAgendamento()
+  }
+
+  class Veiculo {
+    - id : UUID
+    - placa : String
+    + ativarBloqueio()
+  }
+
+  class Apolice {
+    - numero : String
+  }
+}
+
+package "Padrão State (Rastreador)" {
+  class Rastreador {
+    - imei : String
+    - estadoAtual : EstadoRastreador
+    + alterarEstado(EstadoRastreador)
+    + processarSinal()
+  }
+
+  interface EstadoRastreador {
+    + handleSinal(Rastreador)
+  }
+  
+  class EstadoAtivo implements EstadoRastreador
+  class EstadoBloqueado implements EstadoRastreador
+  class EstadoManutencao implements EstadoRastreador
+  
+  Rastreador o--> EstadoRastreador : "State"
+}
+
+package "Padrão Observer & Strategy (Regras)" {
+  class MotorDeRegras {
+    - observadores : List<AlertaObserver>
+    - estrategia : EstrategiaRisco
+    + setEstrategia(EstrategiaRisco)
+    + addObserver(AlertaObserver)
+    + notificarViolacao()
+  }
+
+  interface EstrategiaRisco {
+    + calcularAnomalia(dadosTelemetria) : Boolean
+  }
+  class EstrategiaPasseio implements EstrategiaRisco
+  class EstrategiaFrotaCarga implements EstrategiaRisco
+
+  interface AlertaObserver {
+    + onAlertaGerado(Alerta)
+  }
+  class NotificadorPush implements AlertaObserver
+  class SocketsWebDashboard implements AlertaObserver
+  
+  MotorDeRegras o--> EstrategiaRisco : "Strategy"
+  MotorDeRegras o--> AlertaObserver : "Observer"
+}
+
+package "Padrão Factory (Ingestão IoT)" {
+  class DecodificadorFactory {
+    + criarDecodificador(String marca) : DecodificadorProtocolo
+  }
+  interface DecodificadorProtocolo {
+    + extrairCoordenadas(byte[] payload)
+  }
+  class DecodificadorSuntech implements DecodificadorProtocolo
+  class DecodificadorCoban implements DecodificadorProtocolo
+  
+  DecodificadorFactory ..> DecodificadorProtocolo : "<<cria>>"
+}
+
+package "Padrão Facade (API Mobile)" {
+  class MobileFacade {
+    + bloquearCarroFacade(veiculoId)
+    + agendarInstalacaoFacade(clienteId)
+  }
+}
+
+Cliente "1" -- "*" Apolice
+Apolice "1" -- "1" Veiculo
+Veiculo "1" -- "1" Rastreador
+MobileFacade ..> Veiculo : "Delega"
+MobileFacade ..> MotorDeRegras : "Delega"
+
+@enduml

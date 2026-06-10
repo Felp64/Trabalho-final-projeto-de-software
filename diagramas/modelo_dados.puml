@@ -1,0 +1,70 @@
+@startuml
+skinparam linetype ortho
+
+entity "Cliente" as cliente {
+  * id : UUID <<PK>>
+  --
+  nome : VARCHAR(100)
+  cpf : VARCHAR(11)
+  telefone : VARCHAR(20)
+}
+
+entity "Apolice" as apolice {
+  * numero : VARCHAR(50) <<PK>>
+  --
+  cliente_id : UUID <<FK>>
+  vigencia_fim : DATE
+  status : VARCHAR(20)
+}
+
+entity "Veiculo" as veiculo {
+  * id : UUID <<PK>>
+  --
+  apolice_id : VARCHAR(50) <<FK>>
+  rastreador_imei : VARCHAR(50) <<FK>>
+  placa : VARCHAR(10)
+  chassi : VARCHAR(50)
+  status_bloqueio : BOOLEAN
+}
+
+entity "Rastreador" as rastreador {
+  * imei : VARCHAR(50) <<PK>>
+  --
+  modelo : VARCHAR(50)
+  status : VARCHAR(20)
+  nivel_bateria : DECIMAL
+}
+
+entity "OrdemServico" as os {
+  * id : UUID <<PK>>
+  --
+  veiculo_id : UUID <<FK>>
+  tecnico_id : UUID <<FK>>
+  data_agendamento : TIMESTAMP
+  status : VARCHAR(20)
+}
+
+entity "Tecnico" as tecnico {
+  * id : UUID <<PK>>
+  --
+  nome : VARCHAR(100)
+  oficina : VARCHAR(100)
+}
+
+entity "Alerta" as alerta {
+  * id : UUID <<PK>>
+  --
+  rastreador_imei : VARCHAR(50) <<FK>>
+  tipo : VARCHAR(50)
+  data_hora : TIMESTAMP
+  resolvido : BOOLEAN
+}
+
+cliente ||..o{ apolice
+apolice ||..|| veiculo
+veiculo ||..|| rastreador
+veiculo ||..o{ os
+tecnico ||..o{ os
+rastreador ||..o{ alerta
+
+@enduml
