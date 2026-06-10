@@ -12,6 +12,6 @@ Gestao -> Gestao : 1.1: validarStatusApolice()
 Gestao -> Gestao : 1.2: atualizarStatusBanco(veiculoId, BLOQUEADO)
 Gestao -> Producer : 1.3: enfileirarComando(imei, "CORTE_COMBUSTIVEL")
 Producer -> Gateway : 1.4: publicarKafka(topico_comandos)
-Gateway -> : 1.5: [MQTT Publish para HW]
+Gateway -> HW : 1.5: [MQTT Publish para HW]
 
 @enduml
