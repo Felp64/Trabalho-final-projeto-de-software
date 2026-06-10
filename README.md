@@ -114,38 +114,47 @@ Optamos por uma **Arquitetura Baseada em Eventos (EDA - Event-Driven Architectur
 
 ### 1. Casos de Uso
 Demonstra as interações dos principais atores (Cliente, Técnico, Sistema IoT e Atendente).
+![Casos de Uso](./diagramas/casos_de_uso.png)
 - [📄 Ver código PlantUML](./diagramas/casos_de_uso.puml)
 
 ### 2. Sequência (Alerta de Roubo)
 Ilustra o fluxo passo a passo de notificação de violação e alerta do cliente.
+![Sequência (Alerta de Roubo)](./diagramas/sequencia_alerta.png)
 - [📄 Ver código PlantUML](./diagramas/sequencia_alerta.puml)
 
 ### 3. Sequência do Sistema (DSS)
 Contratos de operações e o fluxo de chamadas para o sistema em 3 Casos de Uso essenciais.
+![Sequência do Sistema (DSS)](./diagramas/ds_sistema.png)
 - [📄 Ver código PlantUML](./diagramas/ds_sistema.puml)
 
 ### 4. Arquitetura (Macro)
 Visão técnica de como os microsserviços, banco de dados e mensageria se conectam no TrackSeg.
+![Arquitetura (Macro)](./diagramas/arquitetura.png)
 - [📄 Ver código PlantUML](./diagramas/arquitetura.puml)
 
 ### 5. Implantação e Componentes
 Mapeamento da alocação dos serviços (Containers) em infraestrutura de nuvem (AWS).
+![Implantação e Componentes](./diagramas/implantacao_componentes.png)
 - [📄 Ver código PlantUML](./diagramas/implantacao_componentes.puml)
 
 ### 6. Classes
 Diagrama de domínio orientado a objetos contendo Veículo, Rastreador, Apólice, Cliente, etc.
+![Classes](./diagramas/classes.png)
 - [📄 Ver código PlantUML](./diagramas/classes.puml)
 
 ### 7. Comunicação
 Visão de colaboração focada nas invocações entre as camadas do sistema para Bloqueio Remoto.
+![Comunicação](./diagramas/comunicacao.png)
 - [📄 Ver código PlantUML](./diagramas/comunicacao.puml)
 
 ### 8. Máquina de Estados
 Ciclo de vida do hardware Rastreador desde o estoque até a sua inutilização ou bloqueio.
+![Máquina de Estados](./diagramas/estados.png)
 - [📄 Ver código PlantUML](./diagramas/estados.puml)
 
 ### 9. Modelo de Dados (ER)
 Diagrama Entidade-Relacionamento do banco de dados relacional (PostgreSQL).
+![Modelo de Dados (ER)](./diagramas/modelo_dados.png)
 - [📄 Ver código PlantUML](./diagramas/modelo_dados.puml)
 
 ---
